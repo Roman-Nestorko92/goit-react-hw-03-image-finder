@@ -37,7 +37,7 @@
 
 .button:hover,
 .button:focus {
-  color: #3c0ebd;
+  color: yellow;
 }
 
 .input {

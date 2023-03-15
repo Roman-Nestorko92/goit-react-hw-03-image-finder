@@ -1,11 +1,12 @@
 import { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
-import fetchImages from 'Links/ImageAPI';
-import Button from '../Button/Button';
-import ImageGallery from '../ImageGallery/ImageGallery';
-import Loader from '../Loader/Loader';
-import Modal from '../Modal/Modal';
-import Searchbar from '../Searchbar/Searchbar';
+// import 'react-toastify/dist/ReactToastify.css';
+import FetchImages from '../../Links/Index';
+import Searchbar from '../Searchbar/Index';
+import ImageGallery from '../ImageGallery/Index';
+import Button from '../Button/Index';
+import Loader from '../Loader/Index';
+import Modal from '../Modal/Index';
 
 class App extends Component {
   state = {
@@ -27,7 +28,7 @@ class App extends Component {
     if (prevState.query !== query) {
       this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
 
-      fetchImages(query)
+      FetchImages(query)
         .then(({ hits, totalHits }) => {
           const imagesArray = hits.map(hit => ({
             id: hit.id,
@@ -52,7 +53,7 @@ class App extends Component {
     if (prevState.page !== page && page !== 1) {
       this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
 
-      fetchImages(query, page)
+      FetchImages(query, page)
         .then(({ hits }) => {
           const imagesArray = hits.map(hit => ({
             id: hit.id,
