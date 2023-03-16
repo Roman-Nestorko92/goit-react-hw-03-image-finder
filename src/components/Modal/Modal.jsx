@@ -38,7 +38,7 @@ class Modal extends Component {
       this.props;
 
     return createPortal(
-      <div className={css.backdrop} onClick={this.handleClickBackdrop}>
+      <div className={css.backdrop} onClick={this.handleClickBackDrop}>
         <div className={css.modal}>
           <div className={css.wrapper}>
             {title && <h1 className={css.title}>{title}</h1>}

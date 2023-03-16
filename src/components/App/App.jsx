@@ -16,7 +16,7 @@ class App extends Component {
     totalImages: 0,
     isLoading: false,
     showModal: false,
-    images: null,
+    images: [],
     error: null,
     currentImageUrl: null,
     currentImageDescription: null,
@@ -25,10 +25,10 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const { query, page } = this.state;
 
-    if (prevState.query !== query) {
+    if ((prevState.page !== page && page !== 1) || prevState.query !== query) {
       this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
 
-      FetchImages(query)
+      FetchImages(query, page)
         .then(({ hits, totalHits }) => {
           const imagesArray = hits.map(hit => ({
             id: hit.id,
@@ -37,35 +37,11 @@ class App extends Component {
             largeImage: hit.largeImageURL,
           }));
 
-          return this.setState({
-            page: 1,
-            images: imagesArray,
-            imagesOnPage: imagesArray.length,
-            totalImages: totalHits,
-          });
-        })
-        .catch(error => this.setState({ error }))
-        .finally(() =>
-          this.setState(({ isLoading }) => ({ isLoading: !isLoading }))
-        );
-    }
-
-    if (prevState.page !== page && page !== 1) {
-      this.setState(({ isLoading }) => ({ isLoading: !isLoading }));
-
-      FetchImages(query, page)
-        .then(({ hits }) => {
-          const imagesArray = hits.map(hit => ({
-            id: hit.id,
-            description: hit.tags,
-            smallImage: hit.webformatURL,
-            largeImage: hit.largeImageURL,
-          }));
-
-          return this.setState(({ images, imagesOnPage }) => {
+          this.setState(({ images, imagesOnPage }) => {
             return {
               images: [...images, ...imagesArray],
               imagesOnPage: imagesOnPage + imagesArray.length,
+              totalImages: totalHits,
             };
           });
         })
@@ -77,7 +53,8 @@ class App extends Component {
   }
 
   getSearchRequest = query => {
-    this.setState({ query });
+    if (this.state.query !== query)
+      this.setState({ query, images: [], page: 1 });
   };
 
   onNextFetch = () => {
